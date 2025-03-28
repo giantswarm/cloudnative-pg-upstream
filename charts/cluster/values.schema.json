@@ -106,6 +106,9 @@
                         "bucket": {
                             "type": "string"
                         },
+                        "inheritFromIAMRole": {
+                            "type": "boolean"
+                        },
                         "path": {
                             "type": "string"
                         },
@@ -134,6 +137,17 @@
                             "schedule": {
                                 "type": "string"
                             }
+                        }
+                    }
+                },
+                "secret": {
+                    "type": "object",
+                    "properties": {
+                        "create": {
+                            "type": "boolean"
+                        },
+                        "name": {
+                            "type": "string"
                         }
                     }
                 },
@@ -173,8 +187,14 @@
                 "certificates": {
                     "type": "object"
                 },
+                "enablePDB": {
+                    "type": "boolean"
+                },
                 "enableSuperuserAccess": {
                     "type": "boolean"
+                },
+                "imageCatalogRef": {
+                    "type": "object"
                 },
                 "imageName": {
                     "type": "string"
@@ -200,6 +220,12 @@
                         "customQueries": {
                             "type": "array"
                         },
+                        "customQueriesSecret": {
+                            "type": "array"
+                        },
+                        "disableDefaultQueries": {
+                            "type": "boolean"
+                        },
                         "enabled": {
                             "type": "boolean"
                         },
@@ -208,6 +234,12 @@
                             "properties": {
                                 "enabled": {
                                     "type": "boolean"
+                                },
+                                "metricRelabelings": {
+                                    "type": "array"
+                                },
+                                "relabelings": {
+                                    "type": "array"
                                 }
                             }
                         },
@@ -231,7 +263,27 @@
                     "type": "integer"
                 },
                 "postgresql": {
-                    "type": "object"
+                    "type": "object",
+                    "properties": {
+                        "ldap": {
+                            "type": "object"
+                        },
+                        "parameters": {
+                            "type": "object"
+                        },
+                        "pg_hba": {
+                            "type": "array"
+                        },
+                        "pg_ident": {
+                            "type": "array"
+                        },
+                        "shared_preload_libraries": {
+                            "type": "array"
+                        },
+                        "synchronous": {
+                            "type": "object"
+                        }
+                    }
                 },
                 "primaryUpdateMethod": {
                     "type": "string"
@@ -248,6 +300,12 @@
                 "roles": {
                     "type": "array"
                 },
+                "serviceAccountTemplate": {
+                    "type": "object"
+                },
+                "services": {
+                    "type": "object"
+                },
                 "storage": {
                     "type": "object",
                     "properties": {
@@ -261,11 +319,36 @@
                 },
                 "superuserSecret": {
                     "type": "string"
+                },
+                "walStorage": {
+                    "type": "object",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean"
+                        },
+                        "size": {
+                            "type": "string"
+                        },
+                        "storageClass": {
+                            "type": "string"
+                        }
+                    }
                 }
             }
         },
         "fullnameOverride": {
             "type": "string"
+        },
+        "imageCatalog": {
+            "type": "object",
+            "properties": {
+                "create": {
+                    "type": "boolean"
+                },
+                "images": {
+                    "type": "array"
+                }
+            }
         },
         "mode": {
             "type": "string"
@@ -273,52 +356,11 @@
         "nameOverride": {
             "type": "string"
         },
-        "pooler": {
-            "type": "object",
-            "properties": {
-                "enabled": {
-                    "type": "boolean"
-                },
-                "instances": {
-                    "type": "integer"
-                },
-                "monitoring": {
-                    "type": "object",
-                    "properties": {
-                        "enabled": {
-                            "type": "boolean"
-                        },
-                        "podMonitor": {
-                            "type": "object",
-                            "properties": {
-                                "enabled": {
-                                    "type": "boolean"
-                                }
-                            }
-                        }
-                    }
-                },
-                "parameters": {
-                    "type": "object",
-                    "properties": {
-                        "default_pool_size": {
-                            "type": "string"
-                        },
-                        "max_client_conn": {
-                            "type": "string"
-                        }
-                    }
-                },
-                "poolMode": {
-                    "type": "string"
-                },
-                "template": {
-                    "type": "object"
-                },
-                "type": {
-                    "type": "string"
-                }
-            }
+        "namespaceOverride": {
+            "type": "string"
+        },
+        "poolers": {
+            "type": "array"
         },
         "recovery": {
             "type": "object",
@@ -398,8 +440,188 @@
                         }
                     }
                 },
+                "import": {
+                    "type": "object",
+                    "properties": {
+                        "databases": {
+                            "type": "array"
+                        },
+                        "pgDumpExtraOptions": {
+                            "type": "array"
+                        },
+                        "pgRestoreExtraOptions": {
+                            "type": "array"
+                        },
+                        "postImportApplicationSQL": {
+                            "type": "array"
+                        },
+                        "roles": {
+                            "type": "array"
+                        },
+                        "schemaOnly": {
+                            "type": "boolean"
+                        },
+                        "source": {
+                            "type": "object",
+                            "properties": {
+                                "database": {
+                                    "type": "string"
+                                },
+                                "host": {
+                                    "type": "string"
+                                },
+                                "passwordSecret": {
+                                    "type": "object",
+                                    "properties": {
+                                        "create": {
+                                            "type": "boolean"
+                                        },
+                                        "key": {
+                                            "type": "string"
+                                        },
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "value": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "port": {
+                                    "type": "integer"
+                                },
+                                "sslCertSecret": {
+                                    "type": "object",
+                                    "properties": {
+                                        "key": {
+                                            "type": "string"
+                                        },
+                                        "name": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "sslKeySecret": {
+                                    "type": "object",
+                                    "properties": {
+                                        "key": {
+                                            "type": "string"
+                                        },
+                                        "name": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "sslMode": {
+                                    "type": "string"
+                                },
+                                "sslRootCertSecret": {
+                                    "type": "object",
+                                    "properties": {
+                                        "key": {
+                                            "type": "string"
+                                        },
+                                        "name": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "username": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "type": {
+                            "type": "string"
+                        }
+                    }
+                },
                 "method": {
                     "type": "string"
+                },
+                "pgBaseBackup": {
+                    "type": "object",
+                    "properties": {
+                        "database": {
+                            "type": "string"
+                        },
+                        "owner": {
+                            "type": "string"
+                        },
+                        "secret": {
+                            "type": "string"
+                        },
+                        "source": {
+                            "type": "object",
+                            "properties": {
+                                "database": {
+                                    "type": "string"
+                                },
+                                "host": {
+                                    "type": "string"
+                                },
+                                "passwordSecret": {
+                                    "type": "object",
+                                    "properties": {
+                                        "create": {
+                                            "type": "boolean"
+                                        },
+                                        "key": {
+                                            "type": "string"
+                                        },
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "value": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "port": {
+                                    "type": "integer"
+                                },
+                                "sslCertSecret": {
+                                    "type": "object",
+                                    "properties": {
+                                        "key": {
+                                            "type": "string"
+                                        },
+                                        "name": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "sslKeySecret": {
+                                    "type": "object",
+                                    "properties": {
+                                        "key": {
+                                            "type": "string"
+                                        },
+                                        "name": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "sslMode": {
+                                    "type": "string"
+                                },
+                                "sslRootCertSecret": {
+                                    "type": "object",
+                                    "properties": {
+                                        "key": {
+                                            "type": "string"
+                                        },
+                                        "name": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "username": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
                 },
                 "pitrTarget": {
                     "type": "object",
@@ -421,6 +643,9 @@
                         "bucket": {
                             "type": "string"
                         },
+                        "inheritFromIAMRole": {
+                            "type": "boolean"
+                        },
                         "path": {
                             "type": "string"
                         },
@@ -431,11 +656,36 @@
                             "type": "string"
                         }
                     }
+                },
+                "secret": {
+                    "type": "object",
+                    "properties": {
+                        "create": {
+                            "type": "boolean"
+                        },
+                        "name": {
+                            "type": "string"
+                        }
+                    }
                 }
             }
         },
         "type": {
             "type": "string"
+        },
+        "version": {
+            "type": "object",
+            "properties": {
+                "postgis": {
+                    "type": "string"
+                },
+                "postgresql": {
+                    "type": "string"
+                },
+                "timescaledb": {
+                    "type": "string"
+                }
+            }
         }
     }
 }

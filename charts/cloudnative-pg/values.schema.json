@@ -5,6 +5,9 @@
         "additionalArgs": {
             "type": "array"
         },
+        "additionalEnv": {
+            "type": "array"
+        },
         "affinity": {
             "type": "object"
         },
@@ -14,11 +17,17 @@
         "config": {
             "type": "object",
             "properties": {
+                "clusterWide": {
+                    "type": "boolean"
+                },
                 "create": {
                     "type": "boolean"
                 },
                 "data": {
                     "type": "object"
+                },
+                "maxConcurrentReconciles": {
+                    "type": "integer"
                 },
                 "name": {
                     "type": "string"
@@ -72,8 +81,14 @@
                 }
             }
         },
+        "dnsPolicy": {
+            "type": "string"
+        },
         "fullnameOverride": {
             "type": "string"
+        },
+        "hostNetwork": {
+            "type": "boolean"
         },
         "image": {
             "type": "object",
@@ -126,6 +141,12 @@
                 },
                 "podMonitorEnabled": {
                     "type": "boolean"
+                },
+                "podMonitorMetricRelabelings": {
+                    "type": "array"
+                },
+                "podMonitorRelabelings": {
+                    "type": "array"
                 }
             }
         },
@@ -141,6 +162,9 @@
             }
         },
         "nameOverride": {
+            "type": "string"
+        },
+        "namespaceOverride": {
             "type": "string"
         },
         "nodeSelector": {
@@ -191,6 +215,12 @@
         "service": {
             "type": "object",
             "properties": {
+                "ipFamilies": {
+                    "type": "array"
+                },
+                "ipFamilyPolicy": {
+                    "type": "string"
+                },
                 "name": {
                     "type": "string"
                 },
@@ -215,6 +245,9 @@
         },
         "tolerations": {
             "type": "array"
+        },
+        "updateStrategy": {
+            "type": "object"
         },
         "webhook": {
             "type": "object",
@@ -245,6 +278,17 @@
                     "type": "object",
                     "properties": {
                         "initialDelaySeconds": {
+                            "type": "integer"
+                        }
+                    }
+                },
+                "startupProbe": {
+                    "type": "object",
+                    "properties": {
+                        "failureThreshold": {
+                            "type": "integer"
+                        },
+                        "periodSeconds": {
                             "type": "integer"
                         }
                     }
